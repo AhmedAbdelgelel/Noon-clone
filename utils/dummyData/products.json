@@ -1,0 +1,122 @@
+[
+    {
+        "title": "Leather Jacket",
+        "quantity": 25,
+        "price": 120.5,
+        "priceAfterDiscount": 110.0,
+        "description": "A stylish leather jacket for cold weather.",
+        "category": "673595bcacf72a5031095ff1",
+        "imageCover": "https://example.com/image1.jpg",
+        "subcategories": [ "67471a997fbb8e1086b8b91b", "67472f68274942b313ba1df6" ],
+        "ratingsAverage": 4.5,
+        "ratingsQuantity": 18
+    },
+    {
+        "title": "Running Shoes",
+        "quantity": 40,
+        "price": 80.0,
+        "priceAfterDiscount": 75.0,
+        "description": "Comfortable shoes for running or casual wear.",
+        "category": "673595bcacf72a5031095ff1",
+        "imageCover": "https://example.com/image2.jpg",
+        "subcategories": [ "67471a997fbb8e1086b8b91b", "67472f68274942b313ba1df6" ],
+        "ratingsAverage": 4.2,
+        "ratingsQuantity": 22
+    },
+    {
+        "title": "Winter Boots",
+        "quantity": 15,
+        "price": 150.0,
+        "priceAfterDiscount": 140.0,
+        "description": "Warm and durable boots for winter hikes.",
+        "category": "673595bcacf72a5031095ff1",
+        "imageCover": "https://example.com/image3.jpg",
+        "subcategories": [ "67471a997fbb8e1086b8b91b", "67472f68274942b313ba1df6" ],
+        "ratingsAverage": 4.7,
+        "ratingsQuantity": 10
+    },
+    {
+        "title": "Cotton T-shirt",
+        "quantity": 30,
+        "price": 25.0,
+        "priceAfterDiscount": 20.0,
+        "description": "Soft cotton T-shirt in various colors.",
+        "category": "673595bcacf72a5031095ff1",
+        "imageCover": "https://example.com/image4.jpg",
+        "subcategories": [ "67471a997fbb8e1086b8b91b", "67472f68274942b313ba1df6" ],
+        "ratingsAverage": 4.0,
+        "ratingsQuantity": 15
+    },
+    {
+        "title": "Sneakers",
+        "quantity": 50,
+        "price": 65.0,
+        "priceAfterDiscount": 60.0,
+        "description": "Casual sneakers for everyday wear.",
+        "category": "673595bcacf72a5031095ff1",
+        "imageCover": "https://example.com/image5.jpg",
+        "subcategories": [ "67471a997fbb8e1086b8b91b", "67472f68274942b313ba1df6" ],
+        "ratingsAverage": 4.3,
+        "ratingsQuantity": 25
+    },
+    {
+        "title": "Backpack",
+        "quantity": 20,
+        "price": 45.0,
+        "priceAfterDiscount": 40.0,
+        "description": "Perfect for hiking or daily commutes.",
+        "category": "673595bcacf72a5031095ff1",
+        "imageCover": "https://example.com/image6.jpg",
+        "subcategories": [ "67471a997fbb8e1086b8b91b", "67472f68274942b313ba1df6" ],
+        "ratingsAverage": 4.1,
+        "ratingsQuantity": 14
+    },
+    {
+        "title": "Sports Shorts",
+        "quantity": 35,
+        "price": 30.0,
+        "priceAfterDiscount": 25.0,
+        "description": "Breathable sports shorts for workouts.",
+        "category": "673595bcacf72a5031095ff1",
+        "imageCover": "https://example.com/image7.jpg",
+        "subcategories": [ "67471a997fbb8e1086b8b91b", "67472f68274942b313ba1df6" ],
+        "ratingsAverage": 4.4,
+        "ratingsQuantity": 28
+    },
+    {
+        "title": "Wool Scarf",
+        "quantity": 50,
+        "price": 20.0,
+        "priceAfterDiscount": 18.0,
+        "description": "A cozy scarf for chilly days.",
+        "category": "673595bcacf72a5031095ff1",
+        "imageCover": "https://example.com/image8.jpg",
+        "subcategories": [ "67471a997fbb8e1086b8b91b", "67472f68274942b313ba1df6" ],
+        "ratingsAverage": 4.6,
+        "ratingsQuantity": 35
+    },
+    {
+        "title": "Sports Socks",
+        "quantity": 60,
+        "price": 10.0,
+        "priceAfterDiscount": 8.0,
+        "description": "Comfortable socks for sports activities.",
+        "category": "673595bcacf72a5031095ff1",
+        "imageCover": "https://example.com/image9.jpg",
+        "subcategories": [ "67471a997fbb8e1086b8b91b", "67472f68274942b313ba1df6" ],
+        "ratingsAverage": 4.3,
+        "ratingsQuantity": 40
+    },
+    {
+        "title": "Trekking Shoes",
+        "quantity": 30,
+        "price": 90.0,
+        "priceAfterDiscount": 85.0,
+        "description": "Sturdy trekking shoes for outdoor adventures.",
+        "category": "673595bcacf72a5031095ff1",
+        "imageCover": "https://example.com/image10.jpg",
+        "subcategories": [ "67471a997fbb8e1086b8b91b", "67472f68274942b313ba1df6" ],
+        "ratingsAverage": 4.5,
+        "ratingsQuantity": 20
+    }
+]

@@ -1,0 +1,955 @@
+openapi: 3.0.0
+info:
+  title: E-commerce API
+  description: API documentation for the E-commerce application
+  version: 1.0.0
+  contact:
+    email: support@ecommerce.com
+
+servers:
+  - url: http://localhost:8000/api/v1
+    description: Development server
+
+tags:
+  - name: Categories
+    description: Category management endpoints
+  - name: SubCategories
+    description: SubCategory management endpoints
+  - name: Brands
+    description: Brand management endpoints
+  - name: Products
+    description: Product management endpoints
+  - name: Users
+    description: User management endpoints
+  - name: Authentication
+    description: Authentication endpoints
+  - name: Reviews
+    description: Product review endpoints
+  - name: Wishlist
+    description: User wishlist endpoints
+  - name: Addresses
+    description: User addresses endpoints
+  - name: Coupons
+    description: Coupon management endpoints
+  - name: Cart
+    description: Shopping cart endpoints
+  - name: Orders
+    description: Order management endpoints
+
+paths:
+  /categories:
+    get:
+      tags:
+        - Categories
+      summary: Get all categories
+      description: Retrieve a list of all categories
+      responses:
+        "200":
+          description: A list of categories
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: integer
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Category"
+    post:
+      tags:
+        - Categories
+      summary: Create a new category
+      description: Create a new category (Admin only)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                  example: Electronics
+      responses:
+        "201":
+          description: Category created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Category"
+
+  /categories/{id}:
+    get:
+      tags:
+        - Categories
+      summary: Get a specific category
+      description: Retrieve a specific category by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Category found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Category"
+        "404":
+          description: Category not found
+    put:
+      tags:
+        - Categories
+      summary: Update a category
+      description: Update a specific category (Admin only)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Updated Electronics
+      responses:
+        "200":
+          description: Category updated successfully
+        "404":
+          description: Category not found
+    delete:
+      tags:
+        - Categories
+      summary: Delete a category
+      description: Delete a specific category (Admin only)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Category deleted successfully
+        "404":
+          description: Category not found
+
+  /subcategories:
+    get:
+      tags:
+        - SubCategories
+      summary: Get all subcategories
+      description: Retrieve a list of all subcategories
+      responses:
+        "200":
+          description: A list of subcategories
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: integer
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/SubCategory"
+    post:
+      tags:
+        - SubCategories
+      summary: Create a new subcategory
+      description: Create a new subcategory (Admin only)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - category
+              properties:
+                name:
+                  type: string
+                  example: Smartphones
+                category:
+                  type: string
+                  example: 60f1a5c8e5a2c01f8c5e5b1b
+      responses:
+        "201":
+          description: SubCategory created successfully
+
+  /brands:
+    get:
+      tags:
+        - Brands
+      summary: Get all brands
+      description: Retrieve a list of all brands
+      responses:
+        "200":
+          description: A list of brands
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: integer
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Brand"
+    post:
+      tags:
+        - Brands
+      summary: Create a new brand
+      description: Create a new brand (Admin only)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                  example: Apple
+      responses:
+        "201":
+          description: Brand created successfully
+
+  /products:
+    get:
+      tags:
+        - Products
+      summary: Get all products
+      description: Retrieve a list of all products with filtering options
+      parameters:
+        - name: keyword
+          in: query
+          schema:
+            type: string
+          description: Search keyword
+        - name: sort
+          in: query
+          schema:
+            type: string
+          description: Sort field
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          description: Number of results per page
+        - name: page
+          in: query
+          schema:
+            type: integer
+          description: Page number
+      responses:
+        "200":
+          description: A list of products
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: integer
+                  pagination:
+                    type: object
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Product"
+    post:
+      tags:
+        - Products
+      summary: Create a new product
+      description: Create a new product (Admin only)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductInput"
+      responses:
+        "201":
+          description: Product created successfully
+
+  /products/{id}:
+    get:
+      tags:
+        - Products
+      summary: Get a specific product
+      description: Retrieve a specific product by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Product found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+        "404":
+          description: Product not found
+
+  /auth/signup:
+    post:
+      tags:
+        - Authentication
+      summary: User signup
+      description: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - email
+                - password
+                - passwordConfirm
+              properties:
+                name:
+                  type: string
+                  example: John Doe
+                email:
+                  type: string
+                  format: email
+                  example: john@example.com
+                password:
+                  type: string
+                  format: password
+                  example: password123
+                passwordConfirm:
+                  type: string
+                  format: password
+                  example: password123
+      responses:
+        "201":
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  data:
+                    $ref: "#/components/schemas/User"
+
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: User login
+      description: Login with email and password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: john@example.com
+                password:
+                  type: string
+                  format: password
+                  example: password123
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  data:
+                    $ref: "#/components/schemas/User"
+
+  /auth/forgotPassword:
+    post:
+      tags:
+        - Authentication
+      summary: Forgot password
+      description: Send a password reset code to user's email
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: john@example.com
+      responses:
+        "200":
+          description: Reset code sent successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: reset code sent to email successfully
+
+  /auth/verifyResetCode:
+    post:
+      tags:
+        - Authentication
+      summary: Verify reset code
+      description: Verify the password reset code sent to user's email
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - resetCode
+              properties:
+                resetCode:
+                  type: string
+                  example: "123456"
+      responses:
+        "200":
+          description: Reset code verified successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: Successful verification
+
+  /auth/resetPassword:
+    put:
+      tags:
+        - Authentication
+      summary: Reset password
+      description: Reset user password after verification
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - newPassword
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: john@example.com
+                newPassword:
+                  type: string
+                  format: password
+                  example: newpassword123
+      responses:
+        "200":
+          description: Password reset successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+
+  /reviews:
+    get:
+      tags:
+        - Reviews
+      summary: Get all reviews
+      description: Retrieve a list of all reviews
+      responses:
+        "200":
+          description: A list of reviews
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: integer
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Review"
+    post:
+      tags:
+        - Reviews
+      summary: Create a new review
+      description: Create a new product review (User only)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - ratings
+                - title
+                - product
+              properties:
+                ratings:
+                  type: number
+                  example: 4.5
+                title:
+                  type: string
+                  example: Great product
+                product:
+                  type: string
+                  example: 60f1a5c8e5a2c01f8c5e5b1b
+      responses:
+        "201":
+          description: Review created successfully
+
+  /wishlist:
+    get:
+      tags:
+        - Wishlist
+      summary: Get user wishlist
+      description: Retrieve the current user's wishlist (User only)
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: User wishlist
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Product"
+    post:
+      tags:
+        - Wishlist
+      summary: Add product to wishlist
+      description: Add a product to the user's wishlist (User only)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - productId
+              properties:
+                productId:
+                  type: string
+                  example: 60f1a5c8e5a2c01f8c5e5b1b
+      responses:
+        "200":
+          description: Product added to wishlist successfully
+
+  /addresses:
+    get:
+      tags:
+        - Addresses
+      summary: Get user addresses
+      description: Retrieve the current user's addresses (User only)
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: User addresses
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Address"
+    post:
+      tags:
+        - Addresses
+      summary: Add address
+      description: Add a new address for the user (User only)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddressInput"
+      responses:
+        "200":
+          description: Address added successfully
+
+  /carts:
+    get:
+      tags:
+        - Cart
+      summary: Get user cart
+      description: Retrieve the current user's shopping cart (User only)
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: User cart
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cart"
+    post:
+      tags:
+        - Cart
+      summary: Add product to cart
+      description: Add a product to the user's cart (User only)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - productId
+                - color
+              properties:
+                productId:
+                  type: string
+                  example: 60f1a5c8e5a2c01f8c5e5b1b
+                color:
+                  type: string
+                  example: Red
+      responses:
+        "200":
+          description: Product added to cart successfully
+
+  /orders/checkout-session/{cartId}:
+    get:
+      tags:
+        - Orders
+      summary: Create checkout session
+      description: Create a Stripe checkout session for payment (User only)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: cartId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Checkout session created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  session:
+                    type: object
+
+  /orders/{cartId}:
+    post:
+      tags:
+        - Orders
+      summary: Create cash order
+      description: Create a new cash-on-delivery order (User only)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: cartId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "201":
+          description: Order created successfully
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Category:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        slug:
+          type: string
+        image:
+          type: string
+    SubCategory:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        slug:
+          type: string
+        category:
+          type: string
+          description: Reference to parent category
+    Brand:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        slug:
+          type: string
+        image:
+          type: string
+    ProductInput:
+      type: object
+      required:
+        - title
+        - description
+        - quantity
+        - price
+        - category
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        quantity:
+          type: integer
+        sold:
+          type: integer
+        price:
+          type: number
+        priceAfterDiscount:
+          type: number
+        colors:
+          type: array
+          items:
+            type: string
+        imageCover:
+          type: string
+        images:
+          type: array
+          items:
+            type: string
+        category:
+          type: string
+        subcategories:
+          type: array
+          items:
+            type: string
+        brand:
+          type: string
+        ratingsAverage:
+          type: number
+        ratingsQuantity:
+          type: integer
+    Product:
+      type: object
+      properties:
+        _id:
+          type: string
+        title:
+          type: string
+        slug:
+          type: string
+        description:
+          type: string
+        quantity:
+          type: integer
+        sold:
+          type: integer
+        price:
+          type: number
+        priceAfterDiscount:
+          type: number
+        colors:
+          type: array
+          items:
+            type: string
+        imageCover:
+          type: string
+        images:
+          type: array
+          items:
+            type: string
+        category:
+          $ref: "#/components/schemas/Category"
+        subcategories:
+          type: array
+          items:
+            $ref: "#/components/schemas/SubCategory"
+        brand:
+          $ref: "#/components/schemas/Brand"
+        ratingsAverage:
+          type: number
+        ratingsQuantity:
+          type: integer
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+          enum: [user, admin, manager]
+        active:
+          type: boolean
+        wishlist:
+          type: array
+          items:
+            type: string
+        addresses:
+          type: array
+          items:
+            $ref: "#/components/schemas/Address"
+    Review:
+      type: object
+      properties:
+        _id:
+          type: string
+        ratings:
+          type: number
+        title:
+          type: string
+        user:
+          $ref: "#/components/schemas/User"
+        product:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+    Address:
+      type: object
+      properties:
+        _id:
+          type: string
+        alias:
+          type: string
+        details:
+          type: string
+        phone:
+          type: string
+        city:
+          type: string
+        postalCode:
+          type: string
+    AddressInput:
+      type: object
+      required:
+        - alias
+        - details
+        - phone
+        - city
+      properties:
+        alias:
+          type: string
+          example: Home
+        details:
+          type: string
+          example: 123 Main St
+        phone:
+          type: string
+          example: +1234567890
+        city:
+          type: string
+          example: New York
+        postalCode:
+          type: string
+          example: 10001
+    Cart:
+      type: object
+      properties:
+        _id:
+          type: string
+        cartItems:
+          type: array
+          items:
+            type: object
+            properties:
+              product:
+                type: string
+              quantity:
+                type: integer
+              color:
+                type: string
+              price:
+                type: number
+        totalCartPrice:
+          type: number
+        totalPriceAfterDiscount:
+          type: number
+        user:
+          type: string
