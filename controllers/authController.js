@@ -5,8 +5,8 @@ const ApiError = require("../utils/apiError");
 const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 const sendEmail = require("../utils/sendEmail");
-const generateToken = require("../utils/createToken");
-
+const { generateToken, generateCSRFToken } = require("../utils/createToken");
+const sanitizeData = require("../utils/sanitizeData");
 // @desc   Signup
 // @route  GET /api/v1/auth/signup
 // @access Public
@@ -21,27 +21,53 @@ exports.signUp = asyncHandler(async (req, res, next) => {
   // 2- Generate JWT
   const token = generateToken(user._id);
 
+  // 3- Generate CSRF token
+  const csrfToken = generateCSRFToken();
+
+  // 4- Set CSRF token in cookie
+  res.cookie("XSRF-TOKEN", csrfToken, {
+    httpOnly: false,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "Lax",
+  });
+
   res.status(201).json({
-    user,
+    data: sanitizeData(user),
     token,
   });
 });
+
 exports.login = asyncHandler(async (req, res, next) => {
-  // 1- check if there are password and email in the body(validation)
-  // 2- check if user exists and check if password is correct
+  // 1- Find user
   const user = await User.findOne({ email: req.body.email });
+  if (!user) {
+    return next(new ApiError("Incorrect email or password", 401));
+  }
+
+  // 2- Check password
   const isCorrectPassword = await bcrypt.compare(
     req.body.password,
     user.password
   );
-  if (!user || !isCorrectPassword) {
+  if (!isCorrectPassword) {
     return next(new ApiError("Incorrect email or password", 401));
   }
+
   // 3- generate token
   const token = generateToken(user._id);
-  // 4- send response to clint side
+
+  // 4- Generate CSRF token
+  const csrfToken = generateCSRFToken();
+
+  // 5- Set CSRF token in cookie
+  res.cookie("XSRF-TOKEN", csrfToken, {
+    httpOnly: false,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "Lax",
+  });
+
   res.status(200).json({
-    user,
+    data: sanitizeData(user),
     token,
   });
 });
@@ -76,7 +102,7 @@ exports.protect = asyncHandler(async (req, res, next) => {
         new ApiError("Your token has expired. Please log in again.", 401)
       );
     }
-    // Generic error for other cases
+
     return next(new ApiError("Failed to authenticate token.", 401));
   }
   // 3- check if user exists
@@ -89,23 +115,20 @@ exports.protect = asyncHandler(async (req, res, next) => {
       )
     );
   }
-  // Skip the active check for the recoverMe and changeMyPassword
   if (req.path === "/changeMyPassword" || req.path === "/recoverMe") {
     req.user = currentUser;
     return next();
   }
-  // 4- check if user is active
+
   if (!currentUser.active) {
     return next(new ApiError("You must activate your account", 404));
   }
 
-  // 5- check if user changed their password after token was created
   if (currentUser.passwordChangedAt) {
     const passwordChangedTimeStamp = parseInt(
       currentUser.passwordChangedAt.getTime() / 1000,
       10
     );
-    // password changed after token created (Error)
     if (passwordChangedTimeStamp > decoded.iat) {
       return next(
         new ApiError(
@@ -148,7 +171,6 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
     .createHash("sha256")
     .update(resetCode)
     .digest("hex");
-  // Save hashed password reset code into db
   user.passwordResetCode = hashedResetCode;
   // Add expiration time for password reset code (10 min)
   user.passwordResetExpires = Date.now() + 10 * 60 * 1000;

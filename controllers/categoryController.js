@@ -5,10 +5,8 @@ const factory = require("./handlersFactory");
 const CategoryModel = require("../models/categoryModel");
 const { uploadSingleImage } = require("../middlewares/uploadImageMiddleware");
 
-// Upload single image
 exports.uploadCategoryImage = uploadSingleImage("image");
 
-// Image processing
 exports.resizeImage = asyncHandler(async (req, res, next) => {
   const filename = `category-${uuidv4()}-${Date.now()}.jpeg`;
   if (req.file) {
@@ -18,7 +16,6 @@ exports.resizeImage = asyncHandler(async (req, res, next) => {
       .png({ quality: 90 })
       .toFile(`uploads/categories/${filename}`);
 
-    // Save image into our db
     req.body.image = filename;
   }
 

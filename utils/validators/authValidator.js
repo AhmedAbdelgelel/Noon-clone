@@ -59,6 +59,5 @@ exports.loginValidator = [
     .withMessage("Password required")
     .isLength({ min: 6 })
     .withMessage("Password must be at least 6 characters"),
-
   validatorMiddleware,
 ];

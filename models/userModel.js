@@ -1,4 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
 const bcrypt = require("bcryptjs");
 const mongoose = require("mongoose");
 

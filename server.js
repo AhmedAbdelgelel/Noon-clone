@@ -7,6 +7,9 @@ const dotenv = require("dotenv");
 const swaggerUi = require("swagger-ui-express");
 const YAML = require("yamljs");
 const swaggerDocument = YAML.load("./swagger.yaml");
+const hpp = require("hpp");
+const mongoSanitize = require("express-mongo-sanitize");
+const xss = require("xss-clean");
 
 dotenv.config({ path: "config.env" });
 const ApiError = require("./utils/apiError");
@@ -27,10 +30,45 @@ app.options("*", cors());
 app.use(compression());
 
 // Middlewares
-app.use(express.json());
+app.use(express.json({ limit: "20kb" }));
+// Sanitize data
+app.use(mongoSanitize());
+app.use((req, res, next) => {
+  console.log("After Mongo Sanitize:", {
+    body: req.body,
+    query: req.query,
+    params: req.params,
+  });
+  next();
+});
+
+// Data sanitization against XSS
+app.use(xss());
+app.use((req, res, next) => {
+  console.log("After XSS Clean:", {
+    body: req.body,
+    query: req.query,
+    params: req.params,
+  });
+  next();
+});
+
+// Prevent parameter pollution
+app.use(
+  hpp({
+    whitelist: [
+      "price",
+      "sold",
+      "quantity",
+      "ratingsAverage",
+      "ratingsQuantity",
+    ],
+  })
+);
+// Serving static files
 app.use(express.static(path.join(__dirname, "uploads")));
 
-// Swagger documentation
+// Mount swagger docs
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 if (process.env.NODE_ENV === "development") {
