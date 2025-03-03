@@ -33,25 +33,9 @@ app.use(compression());
 app.use(express.json({ limit: "20kb" }));
 // Sanitize data
 app.use(mongoSanitize());
-app.use((req, res, next) => {
-  console.log("After Mongo Sanitize:", {
-    body: req.body,
-    query: req.query,
-    params: req.params,
-  });
-  next();
-});
 
 // Data sanitization against XSS
 app.use(xss());
-app.use((req, res, next) => {
-  console.log("After XSS Clean:", {
-    body: req.body,
-    query: req.query,
-    params: req.params,
-  });
-  next();
-});
 
 // Prevent parameter pollution
 app.use(

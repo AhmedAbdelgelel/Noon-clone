@@ -2,7 +2,7 @@ const sharp = require("sharp");
 const { v4: uuidv4 } = require("uuid");
 const asyncHandler = require("express-async-handler");
 const factory = require("./handlersFactory");
-const CategoryModel = require("../models/categoryModel");
+const Category = require("../models/categoryModel");
 const { uploadSingleImage } = require("../middlewares/uploadImageMiddleware");
 
 exports.uploadCategoryImage = uploadSingleImage("image");
@@ -25,33 +25,24 @@ exports.resizeImage = asyncHandler(async (req, res, next) => {
 // @desc  Get list of categories
 // @route GET /api/v1/categories
 // @access Public
-exports.getCategories = factory.getAll(CategoryModel);
+exports.getCategories = factory.getAll(Category);
 
 // @desc   Get specific category by id
 // @route GET /api/v1/categories/:id
 // @access Public
-exports.getCategory = factory.getOne(CategoryModel);
+exports.getCategory = factory.getOne(Category);
 
 // @desc   Create Category
 // @route  POST /api/v1/categories
 // @access Private/Admin-Manager
-exports.createCategory = factory.createOne(CategoryModel);
+exports.createCategory = factory.createOne(Category);
 
 // @desc   Update specific category
 // @route  PUT /api/v1/categories
 // @access Private/Admin-Manager
-exports.updateCategory = factory.updateOne(CategoryModel);
+exports.updateCategory = factory.updateOne(Category);
 
 // @desc   Delete specific category
 // @route  DELETE /api/v1/categories
 // @access Private/Admin
-exports.deleteCategory = factory.deleteOne(CategoryModel);
-
-// exports.deleteCategory = asyncHandler(async (req, res, next) => {
-//   const { id } = req.params;
-//   const category = await CategoryModel.findByIdAndDelete(id);
-//   if (!category) {
-//     return next(new ApiError(`No category found for this id: ${id}`, 404));
-//   }
-//   res.status(204).send();
-// });
+exports.deleteCategory = factory.deleteOne(Category);
