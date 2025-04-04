@@ -12,10 +12,11 @@ const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
 
 dotenv.config({ path: "config.env" });
-const ApiError = require("./utils/apiError");
+
 const globalError = require("./middlewares/errorMiddleware");
 const dbConnection = require("./config/database");
 const mountRoutes = require("./Routes/mountRoutes");
+const notFound = require("./middlewares/notFoundMiddleware");
 // Database connection
 dbConnection();
 
@@ -24,7 +25,7 @@ const app = express();
 
 // Enable CORS - Allow to access from any website
 app.use(cors());
-app.options("*", cors());
+app.options(/.*/, cors());
 
 // compress all responses
 app.use(compression());
@@ -63,9 +64,8 @@ if (process.env.NODE_ENV === "development") {
 // Mount Routes
 mountRoutes(app);
 
-app.all("*", (req, res, next) => {
-  next(new ApiError(`Can't find this route : ${req.originalUrl}`, 400));
-});
+// Handle not found routes
+app.use(notFound);
 
 // Global error handling middleware
 app.use(globalError);
